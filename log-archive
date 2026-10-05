@@ -1,0 +1,34 @@
+#!/bin/bash
+
+log_dir="$1"
+
+# Check if log directory was provided
+if [ -z "$log_dir" ]; then
+    echo "Usage: $0 <log-directory>"
+    exit 1
+fi
+
+# Check if log directory exists
+if [ ! -d "$log_dir" ]; then
+    echo "Error: directory not found: $log_dir"
+    exit 1
+fi
+
+# Create archive directory
+archive_dir="archives"
+mkdir -p "$archive_dir"
+
+# Generate timestamp
+timestamp=$(date +"%Y%m%d_%H%M%S")
+
+# Generate archive filename
+archive_file="logs_archive_${timestamp}.tar.gz"
+archive_path="$archive_dir/$archive_file"
+
+# Create compressed archive
+tar -czf "$archive_path" "$log_dir"
+
+# Log archive date and time
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Archived $log_dir" >> "$archive_dir/archive.log"
+
+echo "Archive created: $archive_path"
